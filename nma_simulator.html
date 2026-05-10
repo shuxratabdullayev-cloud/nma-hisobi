@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nomoddiy Aktivlar Hisobi — Simulyator</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --bg: #0f1729;
+  --card: #1a2540;
+  --card2: #213058;
+  --accent: #38bdf8;
+  --accent2: #818cf8;
+  --accent3: #f472b6;
+  --accent4: #34d399;
+  --accent5: #fbbf24;
+  --text: #e2e8f0;
+  --text2: #94a3b8;
+  --correct: #22c55e;
+  --wrong: #ef4444;
+  --white: #ffffff;
+  --radius: 16px;
+  --shadow: 0 8px 32px rgba(0,0,0,.4);
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== HEADER ===== */
+.header {
+  text-align: center;
+  padding: 40px 20px 20px;
+  position: relative;
+}
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 300px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(56,189,248,.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+.brand {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-family: 'Playfair Display', serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  background: linear-gradient(135deg, var(--white), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 8px;
+}
+.header p { color: var(--text2); font-size: 16px; }
+
+/* ===== NAV TABS ===== */
+.nav-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  gap: 6px;
+  flex-wrap: wrap;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(15,23,41,.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(56,189,248,.1);
+}
+.nav-btn {
+  padding: 10px 18px;
+  border: 1px solid rgba(56,189,248,.2);
+  border-radius: 30px;
+  background: transparent;
+  color: var(--text2);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .3s;
+  white-space: nowrap;
+}
+.nav-btn:hover { border-color: var(--accent); color: var(--accent); }
+.nav-btn.active {
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--white);
+  border-color: transparent;
+  box-shadow: 0 4px 20px rgba(56,189,248,.3);
+}
+
+/* ===== SECTIONS ===== */
+.section { display: none; max-width: 1100px; margin: 0 auto; padding: 20px; }
+.section.active { display: block; animation: fadeUp .5s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:translateY(0); } }
+
+/* ===== INFOGRAPHIC ===== */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+.info-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px;
+  border: 1px solid rgba(56,189,248,.1);
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s, box-shadow .3s;
+}
+.info-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.info-card .icon {
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin-bottom: 16px;
+}
+.info-card h3 { font-size: 18px; margin-bottom: 10px; color: var(--white); }
+.info-card p { font-size: 14px; color: var(--text2); line-height: 1.7; }
+.info-card ul { list-style: none; margin-top: 10px; }
+.info-card li { font-size: 13px; color: var(--text2); padding: 4px 0; padding-left: 18px; position: relative; }
+.info-card li::before { content: '▸'; position: absolute; left: 0; color: var(--accent); }
+
+.info-full {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 30px;
+  margin-top: 20px;
+  border: 1px solid rgba(56,189,248,.1);
+}
+.info-full h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  margin-bottom: 16px;
+  color: var(--accent);
+}
+.flow-steps {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 10px 0;
+}
+.flow-step {
+  min-width: 160px;
+  padding: 20px 16px;
+  background: var(--card2);
+  border-radius: 14px;
+  text-align: center;
+  position: relative;
+  flex-shrink: 0;
+}
+.flow-step .num {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--white);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 14px;
+}
+.flow-step p { font-size: 12px; color: var(--text2); }
+.flow-step h4 { font-size: 14px; margin-bottom: 6px; }
+
+.amt-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+.amt-table th, .amt-table td {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 13px;
+  border-bottom: 1px solid rgba(56,189,248,.1);
+}
+.amt-table th {
+  background: var(--card2);
+  color: var(--accent);
+  font-weight: 700;
+}
+.amt-table td { color: var(--text2); }
+
+/* ===== FLASHCARDS ===== */
+.flash-container { text-align: center; margin-top: 20px; }
+.flash-counter { color: var(--text2); margin-bottom: 16px; font-size: 14px; }
+.flashcard {
+  width: 100%;
+  max-width: 520px;
+  height: 320px;
+  margin: 0 auto;
+  perspective: 1000px;
+  cursor: pointer;
+}
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform .6s;
+  transform-style: preserve-3d;
+}
+.flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+.flash-front, .flash-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+}
+.flash-front {
+  background: linear-gradient(135deg, var(--card), var(--card2));
+  border: 2px solid rgba(56,189,248,.2);
+}
+.flash-back {
+  background: linear-gradient(135deg, var(--card2), #2d3e6d);
+  border: 2px solid rgba(129,140,248,.3);
+  transform: rotateY(180deg);
+}
+.flash-front h3 { font-size: 20px; color: var(--accent); margin-bottom: 12px; }
+.flash-front p { font-size: 16px; line-height: 1.6; }
+.flash-back p { font-size: 15px; line-height: 1.7; color: var(--text); }
+.flash-hint { font-size: 12px; color: var(--text2); margin-top: 12px; }
+.flash-nav { margin-top: 20px; display: flex; gap: 12px; justify-content: center; }
+.flash-nav button {
+  padding: 12px 28px;
+  border-radius: 30px;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .3s;
+}
+.btn-prev { background: var(--card2); color: var(--text); }
+.btn-next { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: var(--white); }
+.btn-prev:hover, .btn-next:hover { transform: scale(1.05); }
+
+/* ===== GAME ===== */
+.game-area { text-align: center; margin-top: 20px; }
+.game-hud {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.hud-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px 24px;
+  text-align: center;
+  min-width: 100px;
+}
+.hud-item .label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 1px; }
+.hud-item .value { font-size: 28px; font-weight: 900; color: var(--accent); margin-top: 4px; }
+.hud-item .value.red { color: var(--wrong); }
+.hud-item .value.green { color: var(--correct); }
+
+.game-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 30px;
+  max-width: 700px;
+  margin: 0 auto;
+  border: 1px solid rgba(56,189,248,.1);
+}
+.game-card .q-num { font-size: 12px; color: var(--text2); margin-bottom: 6px; }
+.game-card .question {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  line-height: 1.5;
+  color: var(--white);
+}
+.game-opts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.game-opt {
+  padding: 16px 20px;
+  border-radius: 14px;
+  border: 2px solid rgba(56,189,248,.15);
+  background: var(--card2);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all .3s;
+  text-align: center;
+}
+.game-opt:hover { border-color: var(--accent); background: rgba(56,189,248,.1); }
+.game-opt.correct { border-color: var(--correct); background: rgba(34,197,94,.15); color: var(--correct); }
+.game-opt.wrong { border-color: var(--wrong); background: rgba(239,68,68,.15); color: var(--wrong); }
+.game-opt:disabled { cursor: default; opacity: .9; }
+
+.timer-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--card2);
+  border-radius: 3px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.timer-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  border-radius: 3px;
+  transition: width .1s linear;
+}
+.timer-fill.danger { background: linear-gradient(90deg, var(--wrong), var(--accent3)); }
+
+.start-btn, .restart-btn {
+  padding: 16px 40px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--white);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 18px;
+  cursor: pointer;
+  transition: all .3s;
+  margin-top: 20px;
+}
+.start-btn:hover, .restart-btn:hover { transform: scale(1.05); box-shadow: 0 6px 24px rgba(56,189,248,.4); }
+
+/* ===== TEST ===== */
+.test-area { max-width: 750px; margin: 20px auto; }
+.test-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 28px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(56,189,248,.1);
+}
+.test-card .q-label { font-size: 12px; color: var(--accent); font-weight: 700; margin-bottom: 8px; }
+.test-card .q-text { font-size: 16px; font-weight: 700; margin-bottom: 18px; line-height: 1.5; color: var(--white); }
+.test-opts { display: flex; flex-direction: column; gap: 10px; }
+.test-opt {
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 2px solid rgba(56,189,248,.1);
+  background: var(--card2);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all .3s;
+  text-align: left;
+}
+.test-opt:hover { border-color: var(--accent); }
+.test-opt.selected { border-color: var(--accent); background: rgba(56,189,248,.1); }
+.test-opt.t-correct { border-color: var(--correct); background: rgba(34,197,94,.15); color: var(--correct); }
+.test-opt.t-wrong { border-color: var(--wrong); background: rgba(239,68,68,.15); color: var(--wrong); }
+.test-opt:disabled { cursor: default; }
+
+.submit-btn {
+  display: block;
+  width: 100%;
+  max-width: 300px;
+  margin: 24px auto;
+  padding: 14px 28px;
+  border-radius: 30px;
+  border: none;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  color: var(--white);
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all .3s;
+}
+.submit-btn:hover { transform: scale(1.03); }
+
+.result-box {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 30px;
+  text-align: center;
+  margin-top: 20px;
+  border: 1px solid rgba(56,189,248,.1);
+}
+.result-box .score {
+  font-size: 64px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.result-box .score-label { color: var(--text2); font-size: 16px; margin-bottom: 10px; }
+.result-box .msg { font-size: 20px; font-weight: 700; margin-top: 10px; }
+
+.review-item {
+  background: var(--card);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 14px;
+  text-align: left;
+  border-left: 4px solid var(--correct);
+}
+.review-item.rev-wrong { border-left-color: var(--wrong); }
+.review-item .rev-q { font-weight: 700; margin-bottom: 6px; font-size: 14px; }
+.review-item .rev-a { font-size: 13px; color: var(--text2); }
+.review-item .rev-correct { color: var(--correct); font-weight: 700; }
+.review-item .rev-your { color: var(--wrong); font-weight: 700; }
+
+/* ===== SALUT / FIREWORKS ===== */
+#fireworks-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ===== FOOTER ===== */
+.footer {
+  text-align: center;
+  padding: 40px 20px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(56,189,248,.1);
+}
+.footer .brand-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  background: linear-gradient(135deg, var(--accent5), var(--accent3));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 6px;
+}
+.footer p { color: var(--text2); font-size: 13px; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .game-opts { grid-template-columns: 1fr; }
+  .nav-btn { padding: 8px 14px; font-size: 11px; }
+  .info-grid { grid-template-columns: 1fr; }
+  .flow-steps { flex-direction: column; }
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px;
+  text-align: center;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+.section-sub {
+  text-align: center;
+  color: var(--text2);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+/* timer for test3 */
+.test3-timer {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+
+.game-result-area { text-align: center; }
+</style>
+</head>
+<body>
+
+<canvas id="fireworks-canvas"></canvas>
+
+<div class="header">
+  <div class="brand">FAXR MADAD KONSALT — Buxgalteriya Maktabi</div>
+  <h1>Nomoddiy Aktivlar Hisobi</h1>
+  <p>Interaktiv Simulyator — O'rganish, Mashq qilish, Bilimni tekshirish</p>
+</div>
+
+<div class="nav-wrap">
+  <button class="nav-btn active" onclick="showSection('infographic')">📊 Infografika</button>
+  <button class="nav-btn" onclick="showSection('flashcards')">🃏 Fleshkartalar</button>
+  <button class="nav-btn" onclick="showSection('game')">🎮 Debet/Kredit</button>
+  <button class="nav-btn" onclick="showSection('test1')">📝 Test 1</button>
+  <button class="nav-btn" onclick="showSection('test2')">🧠 Test 2</button>
+  <button class="nav-btn" onclick="showSection('test3')">📋 Test 3</button>
+</div>
+
+<!-- ==================== 1. INFOGRAPHIC ==================== -->
+<div id="infographic" class="section active">
+  <h2 class="section-title">Nomoddiy Aktivlar — Infografika</h2>
+  <p class="section-sub">7-son BHMS asosida tuzilgan</p>
+
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="icon" style="background:rgba(56,189,248,.15);color:var(--accent);">📜</div>
+      <h3>NMA nima?</h3>
+      <p>Nomoddiy aktiv — moddiy shaklga ega bo'lmagan, 12 oydan ko'p foydalaniladigan, identifikatsiya qilinadigan mol-mulk ob'yekti.</p>
+      <ul>
+        <li>Moddiy shaklga ega emas</li>
+        <li>12 oydan ko'p foydalaniladi</li>
+        <li>BHMning 50 baravari qiymati</li>
+        <li>Qayta sotish mo'ljallanmaydi</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="icon" style="background:rgba(129,140,248,.15);color:var(--accent2);">📋</div>
+      <h3>NMA turlari</h3>
+      <p>Standartda belgilangan asosiy nomoddiy aktivlar ro'yxati:</p>
+      <ul>
+        <li>Patentlar va ixtirolar</li>
+        <li>Dasturiy mahsulotlar</li>
+        <li>Tovar belgilari</li>
+        <li>Gudvill</li>
+        <li>Litsenziyalar</li>
+        <li>Yer foydalanish huquqi</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="icon" style="background:rgba(244,114,182,.15);color:var(--accent3);">💰</div>
+      <h3>NMA kelib tushish yo'llari</h3>
+      <p>Nomoddiy aktivlar korxonaga quyidagi usullar bilan keladi:</p>
+      <ul>
+        <li>Haq evaziga xarid qilish</li>
+        <li>Ustav fondiga hissa</li>
+        <li>Tekin (hadya) olish</li>
+        <li>O'zi yaratish (ITTKI)</li>
+        <li>Ayirboshlash</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="icon" style="background:rgba(52,211,153,.15);color:var(--accent4);">📊</div>
+      <h3>Amortizatsiya usullari</h3>
+      <p>NMA qiymatini xarajatlarga o'tkazish usullari:</p>
+      <ul>
+        <li>To'g'ri chiziqli usul</li>
+        <li>Ishlab chiqarish usuli</li>
+        <li>Ikki baravar qoldiq usuli</li>
+        <li>Yillar yig'indisi (kumulyativ)</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="icon" style="background:rgba(251,191,36,.15);color:var(--accent5);">🔑</div>
+      <h3>Asosiy schyotlar</h3>
+      <p>NMA hisobida ishlatiladigan schyotlar:</p>
+      <ul>
+        <li>0400 — NMA hisobi</li>
+        <li>0500 — NMA amortizatsiyasi</li>
+        <li>0830 — NMA xarid qilish</li>
+        <li>0890 — Boshqa kapital qo'yilmalar</li>
+        <li>9220 — NMA chiqib ketishi</li>
+      </ul>
+    </div>
+
+    <div class="info-card">
+      <div class="icon" style="background:rgba(56,189,248,.15);color:var(--accent);">⚠️</div>
+      <h3>NMA deb tan olinmaydi</h3>
+      <p>Quyidagilar nomoddiy aktiv hisoblanmaydi:</p>
+      <ul>
+        <li>Xodimlarning intellektual sifatlari</li>
+        <li>Mutlaq huquqsiz dasturlar</li>
+        <li>O'zi yaratilgan gudvill</li>
+        <li>Ilmiy tadqiqot xarajatlari</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-full">
+    <h2>NMA boshlang'ich qiymatini shakllantirish</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="num">1</div>
+        <h4>Xarid narxi</h4>
+        <p>Yetkazib beruvchiga to'lanadigan summa (QQSsiz)</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">2</div>
+        <h4>Ro'yxat yig'imlari</h4>
+        <p>Patent bojlari, davlat bojlari</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">3</div>
+        <h4>Bojxona bojlari</h4>
+        <p>Import bojlari va yig'imlari</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">4</div>
+        <h4>Qo'shimcha xarajatlar</h4>
+        <p>Maslahat, axborot xizmatlari</p>
+      </div>
+      <div class="flow-step">
+        <div class="num">5</div>
+        <h4>Boshlang'ich qiymat</h4>
+        <p>Jami summa = NMA qiymati</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-full" style="margin-top:20px;">
+    <h2>Amortizatsiya usullari taqqoslash</h2>
+    <table class="amt-table">
+      <tr><th>Usul</th><th>Xususiyati</th><th>Qo'llanilishi</th></tr>
+      <tr><td>To'g'ri chiziqli</td><td>Har yili teng summa</td><td>Eng ko'p qo'llaniladigan</td></tr>
+      <tr><td>Ishlab chiqarish</td><td>Mahsulot hajmiga bog'liq</td><td>Mavsumiy ishlab chiqarish</td></tr>
+      <tr><td>Ikki baravar qoldiq</td><td>Tezlashtirilgan usul</td><td>Tez eskiruvchi aktivlar</td></tr>
+      <tr><td>Yillar yig'indisi</td><td>Kamayib boruvchi ulush</td><td>Tez eskiruvchi aktivlar</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 2. FLASHCARDS ==================== -->
+<div id="flashcards" class="section">
+  <h2 class="section-title">Fleshkartalar</h2>
+  <p class="section-sub">Kartani bosib javobni ko'ring</p>
+  <div class="flash-container">
+    <div class="flash-counter" id="flashCounter">1 / 12</div>
+    <div class="flashcard" id="flashcard" onclick="this.classList.toggle('flipped')">
+      <div class="flashcard-inner">
+        <div class="flash-front">
+          <h3 id="flashQ">Savol</h3>
+          <p id="flashQText">Yuklanmoqda...</p>
+          <div class="flash-hint">👆 Javobni ko'rish uchun bosing</div>
+        </div>
+        <div class="flash-back">
+          <p id="flashA">Javob</p>
+        </div>
+      </div>
+    </div>
+    <div class="flash-nav">
+      <button class="btn-prev" onclick="prevFlash()">⬅ Oldingi</button>
+      <button class="btn-next" onclick="nextFlash()">Keyingi ➡</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 3. DEBET/KREDIT GAME ==================== -->
+<div id="game" class="section">
+  <h2 class="section-title">🎮 Debet yoki Kredit?</h2>
+  <p class="section-sub">15 ta savolga vaqt ichida javob bering!</p>
+  <div class="game-area" id="gameArea">
+    <div id="gameStart" style="text-align:center;">
+      <p style="font-size:16px; color:var(--text2); margin-bottom:10px;">Xo'jalik operatsiyasi beriladi — to'g'ri schyot va tomonni tanlang!</p>
+      <button class="start-btn" onclick="startGame()">🚀 Boshlash</button>
+    </div>
+    <div id="gamePlay" style="display:none;">
+      <div class="game-hud">
+        <div class="hud-item"><div class="label">Savol</div><div class="value" id="gQNum">1/15</div></div>
+        <div class="hud-item"><div class="label">To'g'ri</div><div class="value green" id="gCorrect">0</div></div>
+        <div class="hud-item"><div class="label">Noto'g'ri</div><div class="value red" id="gWrong">0</div></div>
+        <div class="hud-item"><div class="label">Vaqt</div><div class="value" id="gTimer">15</div></div>
+      </div>
+      <div class="game-card">
+        <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+        <div class="q-num" id="gQLabel">Savol 1</div>
+        <div class="question" id="gQuestion">Yuklanmoqda...</div>
+        <div class="game-opts" id="gOpts"></div>
+      </div>
+    </div>
+    <div id="gameResult" class="game-result-area" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ==================== 4. TEST 1 — NAZARIYA ==================== -->
+<div id="test1" class="section">
+  <h2 class="section-title">📝 Test 1 — Nazariy bilimlar</h2>
+  <p class="section-sub">Nomoddiy aktivlar nazariyasidan 10 ta savol</p>
+  <div class="test-area" id="test1Area"></div>
+  <button class="submit-btn" id="test1Submit" onclick="submitTest('test1')">✅ Tekshirish</button>
+  <div id="test1Result"></div>
+</div>
+
+<!-- ==================== 5. TEST 2 — TANQIDIY FIKRLASH ==================== -->
+<div id="test2" class="section">
+  <h2 class="section-title">🧠 Test 2 — Tanqidiy tahlil</h2>
+  <p class="section-sub">"Nima noto'g'ri?", "Nima yetishmayapti?" shaklidagi savollar</p>
+  <div class="test-area" id="test2Area"></div>
+  <button class="submit-btn" id="test2Submit" onclick="submitTest('test2')">✅ Tekshirish</button>
+  <div id="test2Result"></div>
+</div>
+
+<!-- ==================== 6. TEST 3 — O'TKAZMALAR ==================== -->
+<div id="test3" class="section">
+  <h2 class="section-title">📋 Test 3 — Buxgalteriya o'tkazmalari</h2>
+  <p class="section-sub">Schyotlar va o'tkazmalarga oid 10 ta savol</p>
+  <div class="test3-timer" id="test3Timer">⏱ 10:00</div>
+  <div class="test-area" id="test3Area"></div>
+  <button class="submit-btn" id="test3Submit" onclick="submitTest('test3')">✅ Tekshirish</button>
+  <div id="test3Result"></div>
+</div>
+
+<div class="footer">
+  <div class="brand-name">FAXR MADAD KONSALT</div>
+  <p>Buxgalteriya Maktabi — Bilim va Amaliyot</p>
+  <p style="margin-top:6px;">Nomoddiy aktivlar hisobi simulyatori © 2025</p>
+</div>
+
+<script>
+// ===================== AUDIO SYSTEM =====================
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+function getAudio() { if(!audioCtx) audioCtx = new AudioCtx(); return audioCtx; }
+
+function playCorrectSound() {
+  try {
+    const ctx = getAudio();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine';
+    o.frequency.setValueAtTime(523, ctx.currentTime);
+    o.frequency.setValueAtTime(659, ctx.currentTime + .1);
+    o.frequency.setValueAtTime(784, ctx.currentTime + .2);
+    g.gain.setValueAtTime(.3, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.01, ctx.currentTime + .5);
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime + .5);
+  } catch(e){}
+}
+
+function playWrongSound() {
+  try {
+    const ctx = getAudio();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'square';
+    o.frequency.setValueAtTime(200, ctx.currentTime);
+    o.frequency.setValueAtTime(150, ctx.currentTime + .15);
+    g.gain.setValueAtTime(.2, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.01, ctx.currentTime + .4);
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime + .4);
+  } catch(e){}
+}
+
+function playVictoryMusic() {
+  try {
+    const ctx = getAudio();
+    const notes = [523,659,784,1047,784,1047];
+    notes.forEach((f,i) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.type = 'sine';
+      o.frequency.value = f;
+      g.gain.setValueAtTime(.2, ctx.currentTime + i*.12);
+      g.gain.exponentialRampToValueAtTime(.01, ctx.currentTime + i*.12 + .3);
+      o.start(ctx.currentTime + i*.12);
+      o.stop(ctx.currentTime + i*.12 + .3);
+    });
+  } catch(e){}
+}
+
+function playTickSound() {
+  try {
+    const ctx = getAudio();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.connect(g); g.connect(ctx.destination);
+    o.type = 'sine';
+    o.frequency.value = 880;
+    g.gain.setValueAtTime(.05, ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, ctx.currentTime + .05);
+    o.start(ctx.currentTime);
+    o.stop(ctx.currentTime + .05);
+  } catch(e){}
+}
+
+// ===================== FIREWORKS =====================
+const fwCanvas = document.getElementById('fireworks-canvas');
+const fwCtx = fwCanvas.getContext('2d');
+let particles = [];
+let fwRunning = false;
+
+function resizeFW() { fwCanvas.width = window.innerWidth; fwCanvas.height = window.innerHeight; }
+window.addEventListener('resize', resizeFW);
+resizeFW();
+
+function launchFireworks() {
+  fwRunning = true;
+  for(let i=0;i<5;i++) setTimeout(()=>createBurst(), i*300);
+  setTimeout(()=>{ fwRunning=false; particles=[]; fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height); }, 3000);
+  animateFW();
+}
+
+function createBurst() {
+  const cx = Math.random()*fwCanvas.width;
+  const cy = Math.random()*fwCanvas.height*.5 + 50;
+  const colors = ['#38bdf8','#818cf8','#f472b6','#34d399','#fbbf24','#ef4444','#22c55e','#ffffff'];
+  for(let i=0;i<60;i++) {
+    const angle = (Math.PI*2/60)*i;
+    const speed = 2+Math.random()*4;
+    particles.push({
+      x:cx, y:cy,
+      vx: Math.cos(angle)*speed,
+      vy: Math.sin(angle)*speed,
+      life: 60+Math.random()*30,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      size: 2+Math.random()*2
+    });
+  }
+}
+
+function animateFW() {
+  if(!fwRunning && particles.length===0) return;
+  fwCtx.clearRect(0,0,fwCanvas.width,fwCanvas.height);
+  for(let i=particles.length-1;i>=0;i--) {
+    const p = particles[i];
+    p.x+=p.vx; p.y+=p.vy;
+    p.vy+=.05;
+    p.life--;
+    if(p.life<=0) { particles.splice(i,1); continue; }
+    fwCtx.globalAlpha = p.life/90;
+    fwCtx.fillStyle = p.color;
+    fwCtx.beginPath();
+    fwCtx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    fwCtx.fill();
+  }
+  fwCtx.globalAlpha = 1;
+  requestAnimationFrame(animateFW);
+}
+
+// ===================== NAVIGATION =====================
+function showSection(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// ===================== FLASHCARDS =====================
+const flashData = [
+  { q:"NMA nima?", a:"Moddiy shaklga ega bo'lmagan, 12 oydan ko'p foydalaniladigan, identifikatsiya qilinadigan mol-mulk ob'yekti." },
+  { q:"NMA qaysi schyotda hisobga olinadi?", a:"0400 — Nomoddiy aktivlarni hisobga oluvchi schyotlar guruhida." },
+  { q:"NMA amortizatsiyasi qaysi schyotda?", a:"0500 — NMA eskirishi hisobga olinadigan schyotlar guruhida." },
+  { q:"NMA xarid qilinganda qaysi schyot debet?", a:"0830 — Nomoddiy aktivlarni xarid qilish schyoti debetlanadi." },
+  { q:"NMA boshlang'ich qiymatiga nimalar kiradi?", a:"Xarid narxi, ro'yxatdan o'tkazish yig'imlari, bojxona bojlari, maslahat xizmatlari xarajatlari." },
+  { q:"Gudvill nima?", a:"Xarid qilinayotgan korxonaning haqiqiy qiymati bilan sof aktivlar bozor qiymati o'rtasidagi ijobiy farq." },
+  { q:"NMA foydali xizmat muddati aniqlanmasa?", a:"Foydali xizmat muddati 5 yilga teng qilib belgilanadi." },
+  { q:"NMA amortizatsiyasi qachon boshlanadi?", a:"Ob'yekt NMA tarkibiga qabul qilingan oydan keyingi oyning 1-sanasidan." },
+  { q:"Tekin olingan NMA qaysi schyot kreditida?", a:"8530 — Tekinga olingan mulk schyoti kreditida aks ettiriladi." },
+  { q:"NMA chiqib ketish formulasi?", a:"Moliyaviy natija = Daromad - Qoldiq qiymat - QQS - Chiqish xarajatlari + Qayta baholash saldosi." },
+  { q:"Tovar belgisi NMA hisoblanadimi?", a:"Ha, agar mutlaq huquq mavjud, 12 oydan ko'p foydalanilsa va qiymati BHMning 50 baravaridan kam bo'lmasa." },
+  { q:"Manfiy gudvill nima?", a:"Xarid narxi sof aktivlarning bozor qiymatidan past bo'lgandagi farq. Kechiktirilgan daromad sifatida hisobga olinadi." }
+];
+let flashIdx = 0;
+
+function renderFlash() {
+  const fc = document.getElementById('flashcard');
+  fc.classList.remove('flipped');
+  document.getElementById('flashQ').textContent = '❓ Savol';
+  document.getElementById('flashQText').textContent = flashData[flashIdx].q;
+  document.getElementById('flashA').textContent = flashData[flashIdx].a;
+  document.getElementById('flashCounter').textContent = (flashIdx+1)+' / '+flashData.length;
+}
+function nextFlash() { flashIdx = (flashIdx+1)%flashData.length; renderFlash(); }
+function prevFlash() { flashIdx = (flashIdx-1+flashData.length)%flashData.length; renderFlash(); }
+renderFlash();
+
+// ===================== DEBET/KREDIT GAME =====================
+const gameQuestions = [
+  { q:"NMA sotib olindi (xarid narxi)", correct:"Dt 0830", opts:["Dt 0830","Kt 0830","Dt 9430","Kt 0430"] },
+  { q:"NMA foydalanishga topshirildi", correct:"Dt 0430", opts:["Dt 0430","Kt 0430","Dt 0830","Kt 6010"] },
+  { q:"NMA foydalanishga topshirildi (kredit)", correct:"Kt 0830", opts:["Kt 0830","Dt 0830","Kt 0430","Dt 6010"] },
+  { q:"NMA sotib olishda yetkazib beruvchi qarzi", correct:"Kt 6010", opts:["Kt 6010","Dt 6010","Kt 0830","Dt 4410"] },
+  { q:"NMA bo'yicha amortizatsiya hisoblandi", correct:"Kt 0520", opts:["Kt 0520","Dt 0520","Kt 0430","Dt 0830"] },
+  { q:"Savdo belgisiga amortizatsiya (xarajat)", correct:"Dt 9410", opts:["Dt 9410","Kt 9410","Dt 2010","Kt 0520"] },
+  { q:"Tekin olingan NMA qiymati hisobda", correct:"Kt 8530", opts:["Kt 8530","Dt 8530","Kt 9320","Dt 0830"] },
+  { q:"NMA ustav fondiga hissa sifatida olindi", correct:"Kt 4610", opts:["Kt 4610","Dt 4610","Kt 6010","Dt 8530"] },
+  { q:"Gudvill hisobga olindi (debet)", correct:"Dt 0480", opts:["Dt 0480","Kt 0480","Dt 0430","Kt 6990"] },
+  { q:"NMA sotilganda daromad hisobi", correct:"Kt 9220", opts:["Kt 9220","Dt 9220","Kt 9320","Dt 4010"] },
+  { q:"NMA sotilganda QQS hisoblandi", correct:"Kt 6410", opts:["Kt 6410","Dt 6410","Kt 4410","Dt 9220"] },
+  { q:"NMA chiqib ketish xarajatlari (debet)", correct:"Dt 9220", opts:["Dt 9220","Kt 9220","Dt 9430","Kt 6990"] },
+  { q:"NMA boshlang'ich qiymati hisobdan chiqarildi", correct:"Kt 0430", opts:["Kt 0430","Dt 0430","Kt 0830","Dt 9220"] },
+  { q:"Jamg'arilgan amortizatsiya hisobdan chiqarildi", correct:"Dt 0530", opts:["Dt 0530","Kt 0530","Dt 0520","Kt 9220"] },
+  { q:"NMA yaratish xarajatlari (ish haqi)", correct:"Kt 6710", opts:["Kt 6710","Dt 6710","Kt 6520","Dt 0830"] },
+  { q:"NMA yaratish xarajatlari jamlanadi", correct:"Dt 0890", opts:["Dt 0890","Kt 0890","Dt 0830","Kt 6010"] },
+  { q:"Qayta baholash saldosi hisobdan chiqarildi", correct:"Dt 8510", opts:["Dt 8510","Kt 8510","Dt 9430","Kt 0420"] },
+  { q:"Manfiy gudvill hisobga olindi (kredit)", correct:"Kt 7230", opts:["Kt 7230","Dt 7230","Kt 6230","Dt 0480"] },
+  { q:"NMA xarid bo'yicha QQS aks ettirildi", correct:"Dt 4410", opts:["Dt 4410","Kt 4410","Dt 0830","Kt 6010"] },
+  { q:"NMA sotilganda xaridor qarzi (debet)", correct:"Dt 4010", opts:["Dt 4010","Kt 4010","Dt 9220","Kt 6010"] }
+];
+
+let gIdx=0, gCorrectCnt=0, gWrongCnt=0, gTimer=null, gTimeLeft=15;
+let gQuestions=[];
+
+function shuffleArr(a) {
+  const b=[...a];
+  for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];}
+  return b;
+}
+
+function startGame() {
+  gQuestions = shuffleArr(gameQuestions).slice(0,15);
+  gIdx=0; gCorrectCnt=0; gWrongCnt=0;
+  document.getElementById('gameStart').style.display='none';
+  document.getElementById('gamePlay').style.display='block';
+  document.getElementById('gameResult').style.display='none';
+  showGameQ();
+}
+
+function showGameQ() {
+  if(gIdx>=15) { endGame(); return; }
+  const q = gQuestions[gIdx];
+  document.getElementById('gQNum').textContent = (gIdx+1)+'/15';
+  document.getElementById('gCorrect').textContent = gCorrectCnt;
+  document.getElementById('gWrong').textContent = gWrongCnt;
+  document.getElementById('gQLabel').textContent = 'Savol '+(gIdx+1);
+  document.getElementById('gQuestion').textContent = q.q;
+  const optsDiv = document.getElementById('gOpts');
+  optsDiv.innerHTML = '';
+  const shuffled = shuffleArr(q.opts);
+  shuffled.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'game-opt';
+    btn.textContent = o;
+    btn.onclick = ()=>answerGame(o, btn);
+    optsDiv.appendChild(btn);
+  });
+  gTimeLeft = 15;
+  document.getElementById('gTimer').textContent = gTimeLeft;
+  document.getElementById('timerFill').style.width = '100%';
+  document.getElementById('timerFill').classList.remove('danger');
+  clearInterval(gTimer);
+  gTimer = setInterval(()=>{
+    gTimeLeft--;
+    document.getElementById('gTimer').textContent = gTimeLeft;
+    document.getElementById('timerFill').style.width = (gTimeLeft/15*100)+'%';
+    if(gTimeLeft<=5) { document.getElementById('timerFill').classList.add('danger'); playTickSound(); }
+    if(gTimeLeft<=0) { clearInterval(gTimer); timeoutGame(); }
+  }, 1000);
+}
+
+function answerGame(ans, btn) {
+  clearInterval(gTimer);
+  const q = gQuestions[gIdx];
+  document.querySelectorAll('.game-opt').forEach(b=>b.disabled=true);
+  if(ans===q.correct) {
+    btn.classList.add('correct');
+    gCorrectCnt++;
+    playCorrectSound();
+    launchFireworks();
+    playVictoryMusic();
+  } else {
+    btn.classList.add('wrong');
+    gWrongCnt++;
+    playWrongSound();
+    document.querySelectorAll('.game-opt').forEach(b=>{
+      if(b.textContent===q.correct) b.classList.add('correct');
+    });
+  }
+  document.getElementById('gCorrect').textContent = gCorrectCnt;
+  document.getElementById('gWrong').textContent = gWrongCnt;
+  gIdx++;
+  setTimeout(showGameQ, 1500);
+}
+
+function timeoutGame() {
+  const q = gQuestions[gIdx];
+  document.querySelectorAll('.game-opt').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent===q.correct) b.classList.add('correct');
+  });
+  gWrongCnt++;
+  playWrongSound();
+  document.getElementById('gWrong').textContent = gWrongCnt;
+  gIdx++;
+  setTimeout(showGameQ, 1500);
+}
+
+function endGame() {
+  clearInterval(gTimer);
+  document.getElementById('gamePlay').style.display='none';
+  const rd = document.getElementById('gameResult');
+  rd.style.display='block';
+  const pct = Math.round(gCorrectCnt/15*100);
+  let msg = pct>=80 ? "🏆 Ajoyib natija!" : pct>=60 ? "👍 Yaxshi natija!" : "📚 Mashq qiling!";
+  if(pct>=80) { launchFireworks(); playVictoryMusic(); }
+  rd.innerHTML = `
+    <div class="result-box">
+      <div class="score-label">Natijangiz</div>
+      <div class="score">${gCorrectCnt}/15</div>
+      <div class="msg">${msg}</div>
+      <p style="color:var(--text2);margin-top:8px;">To'g'ri: ${gCorrectCnt} | Noto'g'ri: ${gWrongCnt} | Foiz: ${pct}%</p>
+      <button class="restart-btn" onclick="startGame()">🔄 Qayta boshlash</button>
+    </div>`;
+}
+
+// ===================== TEST DATA =====================
+
+// TEST 1 — Nazariya
+const test1Data = [
+  { q:"NMA deb nimaga aytiladi?", opts:["Moddiy shaklsiz aktiv","Moddiy aktiv turi","Moliyaviy qarz turi","Joriy majburiyat turi"], c:0 },
+  { q:"NMA foydalanish muddati qancha?", opts:["Kamida 12 oydan ko'p","Kamida 6 oydan ko'p","Kamida 3 oydan ko'p","Kamida 24 oydan ko'p"], c:0 },
+  { q:"NMA tan olish uchun nima kerak?", opts:["Mutlaq huquq hujjati","Og'zaki kelishuv","Ichki buyruq asosi","Boshqaruv qarori faqat"], c:0 },
+  { q:"NMAga quyidagilardan qaysi kiradi?", opts:["Patent va ixtirolar","Xodimlar malakasi","Ichki gudvill qiymati","Joriy davr xarajati"], c:0 },
+  { q:"NMA foydali muddati noma'lum bo'lsa?", opts:["5 yil belgilanadi","10 yil belgilanadi","3 yil belgilanadi","20 yil belgilanadi"], c:0 },
+  { q:"Quyidagilardan qaysi NMA emas?", opts:["Xodimlar intellekti","Dasturiy mahsulotlar","Tovar belgisi huquqi","Patentga oid huquq"], c:0 },
+  { q:"NMA identifikatsiya mezoni nima?", opts:["Korxonadan ajralishi","Sotib olish narxi","Jismoniy mavjudligi","Hisobot davri muddati"], c:0 },
+  { q:"Gudvill qachon yuzaga keladi?", opts:["Korxona xarid etilsa","Aktiv sotib olinsa","Amortizatsiya hisobda","Kredit olish chog'ida"], c:0 },
+  { q:"NMA amortizatsiyasi qachon boshlanadi?", opts:["Keyingi oy 1-sanadan","Xarid qilish sanasida","Hisobot yili oxirida","Shartnoma tuzilganda"], c:0 },
+  { q:"7-son BHMS nimani tartibga soladi?", opts:["Nomoddiy aktivlarni","Asosiy vositalarni","Tovar zaxiralarini","Moliyaviy qarzlarni"], c:0 }
+];
+
+// TEST 2 — Tanqidiy tahlil
+const test2Data = [
+  { q:"Quyidagilardan qaysi fikr noto'g'ri?", opts:["Ichki gudvill — NMA","Gudvill xaridda hosil","Patent — NMA misoli","Tovar belgisi — NMA"], c:0 },
+  { q:"NMA boshlang'ich qiymatiga nima kiritilmaydi?", opts:["Bank xizmati xarajati","Ro'yxat yig'im summasi","Patent boj summasi","Maslahat xizmati haqi"], c:0 },
+  { q:"Buxgalter NMA tanidi, lekin nima yetishmaydi?", opts:["Mutlaq huquq hujjati","Ichki buyruq mavjud","Boshlang'ich qiymati","Foydali muddat aniqlangan"], c:0 },
+  { q:"Qaysi xarajat NMA qiymatini oshirmaydi?", opts:["Dasturni yangilash","Yangi funksiya qo'shish","Xizmat muddatni uzaytirish","Imkoniyatni kengaytirish"], c:0 },
+  { q:"NMA amortizatsiyasida nima noto'g'ri?", opts:["Oylik natijalarga bog'liq","To'g'ri chiziqli usuli","Ishlab chiqarish usuli","Kumulyativ hisob usuli"], c:0 },
+  { q:"Quyidagilardan qaysi biri xato?", opts:["NMA qayta sotiladi","NMA identifikatsiya qilinadi","NMA ajralib chiqadi","NMA qiymati aniqlanadi"], c:0 },
+  { q:"Tekin olingan NMA uchun nima noto'g'ri?", opts:["Xarid narxi kiritiladi","Joriy qiymat asosida","Bozor narxi bo'yicha","Qo'shimcha xarajat ham"], c:0 },
+  { q:"NMA chiqib ketishida nima hisobga olinmaydi?", opts:["Kelajak foyda summasi","Qoldiq balans qiymati","Amortizatsiya summasi","Chiqish xarajatlari"], c:0 },
+  { q:"Qaysi holda amortizatsiya to'xtatiladi?", opts:["Aktiv konservatsiyada","Aktiv foydalanishda","Aktiv baholanganda","Aktiv ro'yxatda tursa"], c:0 },
+  { q:"Qayta baholashda nima noto'g'ri qilingan?", opts:["Faqat bitta NMA alohida","Guruh bilan baholanadi","Faol bozor asosida","Indeks qo'llaniladi"], c:0 }
+];
+
+// TEST 3 — O'tkazmalar
+const test3Data = [
+  { q:"NMA sotib olindi: Dt 0830 — Kt ?", opts:["Kt 6010 hisobidan","Kt 0430 hisobidan","Kt 9430 hisobidan","Kt 4410 hisobidan"], c:0 },
+  { q:"NMA foydalanishga topshirildi: Dt ? — Kt 0830", opts:["Dt 0430 hisobidan","Dt 0830 hisobidan","Dt 9220 hisobidan","Dt 6010 hisobidan"], c:0 },
+  { q:"Amortizatsiya hisoblandi: Dt 9410 — Kt ?", opts:["Kt 0520 hisobidan","Kt 0430 hisobidan","Kt 0830 hisobidan","Kt 9220 hisobidan"], c:0 },
+  { q:"Tekin NMA olindi: Dt 0830 — Kt ?", opts:["Kt 8530 hisobidan","Kt 6010 hisobidan","Kt 4610 hisobidan","Kt 9320 hisobidan"], c:0 },
+  { q:"Ustav fondiga NMA: Dt 0830 — Kt ?", opts:["Kt 4610 hisobidan","Kt 8530 hisobidan","Kt 6010 hisobidan","Kt 9320 hisobidan"], c:0 },
+  { q:"NMA yaratish xarajati: Dt ? — Kt 6710", opts:["Dt 0890 hisobidan","Dt 0830 hisobidan","Dt 0430 hisobidan","Dt 9430 hisobidan"], c:0 },
+  { q:"Gudvill aks ettirildi: Dt 0480 — Kt ?", opts:["Kt 6990 hisobidan","Kt 6010 hisobidan","Kt 8530 hisobidan","Kt 0830 hisobidan"], c:0 },
+  { q:"NMA sotildi (daromad): Dt 4010 — Kt ?", opts:["Kt 9220 hisobidan","Kt 0430 hisobidan","Kt 9320 hisobidan","Kt 6010 hisobidan"], c:0 },
+  { q:"NMA qiymati hisobdan chiqarildi: Dt 9220 — Kt ?", opts:["Kt 0430 hisobidan","Kt 0830 hisobidan","Kt 6010 hisobidan","Kt 0520 hisobidan"], c:0 },
+  { q:"NMA xarid QQS: Dt 4410 — Kt ?", opts:["Kt 6010 hisobidan","Kt 0830 hisobidan","Kt 6410 hisobidan","Kt 9430 hisobidan"], c:0 }
+];
+
+// ===================== RENDER TESTS =====================
+function renderTest(containerId, data) {
+  const area = document.getElementById(containerId+'Area');
+  area.innerHTML = '';
+  data.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'test-card';
+    card.innerHTML = `<div class="q-label">${i+1}-savol</div><div class="q-text">${item.q}</div><div class="test-opts" id="${containerId}_q${i}"></div>`;
+    area.appendChild(card);
+    const optsDiv = card.querySelector('.test-opts');
+    const shuffledOpts = item.opts.map((o,idx)=>({text:o, origIdx:idx}));
+    for(let j=shuffledOpts.length-1;j>0;j--){const k=Math.floor(Math.random()*(j+1));[shuffledOpts[j],shuffledOpts[k]]=[shuffledOpts[k],shuffledOpts[j]];}
+    shuffledOpts.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'test-opt';
+      btn.textContent = opt.text;
+      btn.dataset.origIdx = opt.origIdx;
+      btn.onclick = ()=>{
+        optsDiv.querySelectorAll('.test-opt').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+      };
+      optsDiv.appendChild(btn);
+    });
+  });
+}
+
+function submitTest(testId) {
+  let data, area;
+  if(testId==='test1') data=test1Data;
+  else if(testId==='test2') data=test2Data;
+  else data=test3Data;
+
+  if(testId==='test3') clearInterval(test3Timer);
+
+  area = document.getElementById(testId+'Area');
+  let correct=0, total=data.length;
+  const reviews = [];
+
+  data.forEach((item, i) => {
+    const optsDiv = document.getElementById(testId+'_q'+i);
+    const opts = optsDiv.querySelectorAll('.test-opt');
+    let selected = null;
+    opts.forEach(b => {
+      b.disabled = true;
+      if(b.classList.contains('selected')) selected = b;
+      if(parseInt(b.dataset.origIdx)===item.c) b.classList.add('t-correct');
+    });
+    if(selected) {
+      if(parseInt(selected.dataset.origIdx)===item.c) {
+        correct++;
+        reviews.push({ q:item.q, correct:true, correctAns:item.opts[item.c] });
+      } else {
+        selected.classList.add('t-wrong');
+        reviews.push({ q:item.q, correct:false, correctAns:item.opts[item.c], yourAns:selected.textContent });
+      }
+    } else {
+      reviews.push({ q:item.q, correct:false, correctAns:item.opts[item.c], yourAns:'Javob tanlanmadi' });
+    }
+  });
+
+  document.getElementById(testId+'Submit').style.display='none';
+  const pct = Math.round(correct/total*100);
+  let msg = pct>=80 ? "🏆 Ajoyib natija!" : pct>=60 ? "👍 Yaxshi!" : "📚 Qayta o'rganing!";
+  if(pct>=80) { launchFireworks(); playVictoryMusic(); }
+
+  let reviewHTML = '';
+  reviews.forEach((r,i)=>{
+    if(r.correct) {
+      reviewHTML += `<div class="review-item"><div class="rev-q">${i+1}. ${r.q}</div><div class="rev-a"><span class="rev-correct">✅ To'g'ri: ${r.correctAns}</span></div></div>`;
+    } else {
+      reviewHTML += `<div class="review-item rev-wrong"><div class="rev-q">${i+1}. ${r.q}</div><div class="rev-a"><span class="rev-your">❌ Sizning javob: ${r.yourAns}</span><br><span class="rev-correct">✅ To'g'ri javob: ${r.correctAns}</span></div></div>`;
+    }
+  });
+
+  document.getElementById(testId+'Result').innerHTML = `
+    <div class="result-box">
+      <div class="score-label">Natijangiz</div>
+      <div class="score">${correct}/${total}</div>
+      <div class="msg">${msg}</div>
+      <p style="color:var(--text2);margin-top:6px;">Foiz: ${pct}%</p>
+    </div>
+    <h3 style="margin-top:24px;text-align:center;color:var(--accent);">📋 Batafsil tahlil</h3>
+    ${reviewHTML}`;
+}
+
+// Render all tests
+renderTest('test1', test1Data);
+renderTest('test2', test2Data);
+renderTest('test3', test3Data);
+
+// ===================== TEST 3 TIMER =====================
+let test3Timer = null;
+let test3TimeLeft = 600; // 10 minutes
+
+function startTest3Timer() {
+  test3TimeLeft = 600;
+  clearInterval(test3Timer);
+  test3Timer = setInterval(()=>{
+    test3TimeLeft--;
+    const m = Math.floor(test3TimeLeft/60);
+    const s = test3TimeLeft%60;
+    document.getElementById('test3Timer').textContent = `⏱ ${m}:${s<10?'0':''}${s}`;
+    if(test3TimeLeft<=60) document.getElementById('test3Timer').style.color='var(--wrong)';
+    if(test3TimeLeft<=0) { clearInterval(test3Timer); submitTest('test3'); }
+  },1000);
+}
+
+// Start timer when test3 is shown
+const origShowSection = showSection;
+showSection = function(id) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if(event && event.target) event.target.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(id==='test3') startTest3Timer();
+  else if(id!=='test3') clearInterval(test3Timer);
+};
+</script>
+</body>
+</html>
